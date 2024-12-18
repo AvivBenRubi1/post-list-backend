@@ -9,22 +9,17 @@ namespace PostService.Helpers
         private static readonly string FilePath = Path.Combine(Directory.GetCurrentDirectory(), "posts.json");
         public async Task<IEnumerable<T>> Read<T>()
         {
-            return await Task.Run(() =>
-             {
-                 using StreamReader file = File.OpenText(FilePath);
-                 var json = file.ReadToEnd();
-                 return JsonConvert.DeserializeObject<IEnumerable<T>>(json) ?? [];
-             });
+            using StreamReader file = File.OpenText(FilePath);
+            var json = await file.ReadToEndAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(json) ?? [];
         }
 
         public async Task Write<T>(IEnumerable<T> data)
         {
-            await Task.Run(() =>
-           {
-               using StreamWriter file = File.CreateText(FilePath);
-               JsonSerializer serializer = new JsonSerializer();
-               serializer.Serialize(file, data);
-           });
+            using StreamWriter file = new(FilePath, false);
+            JsonSerializer serializer = new();
+            await Task.Yield(); // Yield to avoid blocking the thread
+            serializer.Serialize(file, data);
         }
     }
 }
