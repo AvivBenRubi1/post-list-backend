@@ -36,30 +36,33 @@ namespace PostService.Repository
             return item;
         }
 
-        public async Task<int> Dislike(int id)
-        {
-            var post = await ReadAsync(id);
-            int updatedLikes = 0;
-            if (post != null)
-            {
-                updatedLikes = post.Likes - 1;
-                await UpdateAsync(id, new UpdatePostDto { Likes = updatedLikes });
-            }
-            return updatedLikes;
-        }
+        //public async Task<int> Dislike(int id)
+        //{
+        //    var post = await ReadAsync(id);
+        //    int updatedLikes = 0;
+        //    if (post != null)
+        //    {
+        //        updatedLikes = post.Likes - 1;
+        //        await UpdateAsync(id, new UpdatePostDto { Likes = updatedLikes });
+        //    }
+        //    return updatedLikes;
+        //}
 
         public async Task<IEnumerable<Post>> GetAllAsync()
         {
             return await _customJsonHelper.Read<Post>();
         }
 
-        public async Task<IEnumerable<Post>> GetByFilter(string search, Filter filter)
+        public async Task<IEnumerable<Post>> GetByFilter(string search, string filter)
         {
             var allItems = await GetAllAsync();
+            if(string.IsNullOrEmpty(search))
+                return allItems;
+
             return filter switch
             {
-                Filter.Content => allItems.Where(p => p.Content.Contains(search)),
-                Filter.Author => allItems.Where(p => p.Author.Contains(search)),
+                "Content" => allItems.Where(p => p.Content.Contains(search)),
+                "Author" => allItems.Where(p => p.Author.Contains(search)),
                 _ => allItems.Where(p => p.Title.Contains(search)),
             };
         }

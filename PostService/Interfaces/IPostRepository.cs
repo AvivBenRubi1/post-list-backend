@@ -19,9 +19,8 @@ namespace PostService.Interfaces
         Task<Post?> ReadAsync(int id);
         Task<IEnumerable<Post>> GetAllAsync();
 
-        Task<IEnumerable<Post>> GetByFilter(string search, Filter filter);
+        Task<IEnumerable<Post>> GetByFilter(string search, string filter);
 
         Task<int> Like(int id);
-        Task<int> Dislike(int id);
     }
 }

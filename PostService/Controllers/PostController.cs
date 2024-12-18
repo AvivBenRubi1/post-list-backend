@@ -74,9 +74,9 @@ namespace PostService.Controllers
         }
 
         [HttpGet("get-by")]
-        public async Task<IActionResult> GetBy([FromQuery] string search, [FromQuery] Filter filter)
+        public async Task<IActionResult> GetBy([FromQuery] string filter, [FromQuery] string search = "")
         {
-             return Ok(await _postRepository.GetByFilter(search, filter));    
+            return Ok(await _postRepository.GetByFilter(search, filter));
         }
 
     }
