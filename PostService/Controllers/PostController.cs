@@ -17,6 +17,13 @@ namespace PostService.Controllers
             _postRepository = postRepository;
         }
 
+        [HttpPatch]
+        [Route("like/{id:int}")]
+        public async Task<IActionResult> Like(int id)
+        {
+            return Ok(await _postRepository.Like(id));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostDto createPost)
         {
